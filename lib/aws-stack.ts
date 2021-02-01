@@ -9,4 +9,4 @@ export class AwsStack extends cdk.Stack {
       versioned: true,
     });
   }
-}
+};
