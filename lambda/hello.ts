@@ -2,7 +2,7 @@
 
 import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from 'aws-lambda'
 
-exports.handler =  async (event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> => {
+export async function handler (event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> {
   
   console.log('request -->', JSON.stringify(event));
 
@@ -12,6 +12,5 @@ exports.handler =  async (event: APIGatewayProxyEvent, context: Context): Promis
       'Content-Type': 'text/plain'
     },
     body: `Hello-World ${event.path}`
-  }
-  
-}
+  } 
+} 
