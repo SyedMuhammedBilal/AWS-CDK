@@ -53,7 +53,7 @@ export class AwsStack extends cdk.Stack {
 
     new s3deploy.BucketDeployment(this, 'DeployWebsite', {
       sources: [s3deploy.Source.asset('./website-dist')],
-      destinationBucket: websiteBucket,
+      destinationBucket: bucket,
       destinationKeyPrefix: 'web/static' // optional prefix in destination bucket
     });
 
