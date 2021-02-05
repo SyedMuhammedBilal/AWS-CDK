@@ -7,6 +7,9 @@ import * as lambda from '@aws-cdk/aws-lambda';
 import * as apigw from '@aws-cdk/aws-apigateway';
 import * as s3 from '@aws-cdk/aws-s3'
 import * as s3deploy from '@aws-cdk/aws-s3-deployment'
+import * as cloudfront from '@aws-cdk/aws-cloudfront';
+import * as origins from '@aws-cdk/aws-cloudfront-origins';
+
 
 // for defining stack and their resources of AWS
 
@@ -47,14 +50,31 @@ export class AwsStack extends cdk.Stack {
 
     // AWS-AppSync and AWS-GraphQL
 
+    // created a S3 bucket
     const bucket = new s3.Bucket(this, 'MyNewBucket', {
       versioned: true
     })
 
+    // AWS-CLOUDFRONT
+    // now we are creating a cloudfront from AWS and connecting this cloudfront from S3 bucket and providing a file from which it will target for cloudfront
+    const distribution = new cloudfront.Distribution(this, "Distribution", {
+      defaultBehavior: {
+        origin: new origins.S3Origin(bucket)
+      },
+      defaultRootObject: 'index.html'
+    })
+
+    // the below code creates a unique URL for cloudfront from above distribution code
+    new cdk.CfnOutput(this, "DistributionDomainName", {
+      value: distribution.domainName,
+    })  
+
+    // technically connecting above cloudfront (distribution) to S3 deployment Bucket
     new s3deploy.BucketDeployment(this, 'DeployWebsite', {
-      sources: [s3deploy.Source.asset('./website-dist')],
+      sources: [s3deploy.Source.asset('./website')],
       destinationBucket: bucket,
-      destinationKeyPrefix: 'web/static' // optional prefix in destination bucket
+      distribution,
+      distributionPaths: ['/*'] // optional prefix in destination bucket
     });
 
   }
