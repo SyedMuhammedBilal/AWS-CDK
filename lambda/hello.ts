@@ -13,4 +13,4 @@ export async function handler (event: APIGatewayProxyEvent, context: Context): P
     },
     body: `Hello-World ${event.path}`
   } 
-} 
+}; 
